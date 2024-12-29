@@ -33,20 +33,6 @@ fi
 
 echo "Todos os parâmetros obrigatórios foram passados."
 
-echo "Stack Name: $STACK_NAME"
-echo "Template File: $TEMPLATE_FILE"
-echo "AWS Region: $AWS_REGION"
-echo "Dry Run: $DRY_RUN"
-
-# Verificando se o cfn-lint está instalado
-if ! command -v cfn-lint &> /dev/null
-then
-    echo "cfn-lint não encontrado, instalando..."
-    pip install cfn-lint  # Comando para instalar cfn-lint, caso não esteja presente
-else
-    echo "cfn-lint já está instalado."
-fi
-
 # Validar o template com cfn-lint
 echo "Validando o template com cfn-lint..."
 cfn-lint $TEMPLATE_FILE --ignore-checks W
