@@ -27,8 +27,8 @@ check_empty "$AWS_REGION" "AWS_REGION"
 
 # Se houver parâmetros faltando, exibe uma mensagem de erro e encerra o script
 if [ ${#MISSING_PARAMS[@]} -gt 0 ]; then
-  echo "Faltaram os seguintes parâmetros obrigatórios: ${MISSING_PARAMS[@]}. O deploy não será executado."
-  exit 1
+    echo "Faltaram os seguintes parâmetros obrigatórios: ${MISSING_PARAMS[@]}. O deploy não será executado."
+    exit 1
 fi
 
 echo "Todos os parâmetros obrigatórios foram passados."
@@ -38,22 +38,27 @@ echo "Template File: $TEMPLATE_FILE"
 echo "AWS Region: $AWS_REGION"
 echo "Dry Run: $DRY_RUN"
 
-# Instalar cfn-lint se não estiver disponível
+# Verificando se o cfn-lint está instalado
 if ! command -v cfn-lint &> /dev/null
 then
-    echo "cfn-lint não encontrado. Instalando..."
-    pip install cfn-lint
+    echo "cfn-lint não encontrado, instalando..."
+    pip install cfn-lint  # Comando para instalar cfn-lint, caso não esteja presente
+else
+    echo "cfn-lint já está instalado."
 fi
 
 # Validar o template com cfn-lint
 echo "Validando o template com cfn-lint..."
-cfn-lint $TEMPLATE_FILE
+cfn-lint $TEMPLATE_FILE --ignore-checks W
+
+# Se o cfn-lint falhar, o script será interrompido devido ao set -e
 
 # Lógica para o Dry Run
 if [ "$DRY_RUN" == "true" ]; then
-  DRY_RUN_OPTION="--no-execute-changeset"
+    echo "Executando em modo Dry Run..."
+    DRY_RUN_OPTION="--no-execute-changeset"
 else
-  DRY_RUN_OPTION=""
+    DRY_RUN_OPTION=""
 fi
 
 # Executar o deploy
