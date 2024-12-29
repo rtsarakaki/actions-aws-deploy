@@ -24,5 +24,8 @@ WORKDIR /app
 # Copiar o código do repositório para dentro do container
 COPY . .
 
+# Garantir que o entrypoint.sh seja executável
+RUN chmod +x /app/entrypoint.sh
+
 # Definir o ponto de entrada
 ENTRYPOINT ["/app/entrypoint.sh"]
