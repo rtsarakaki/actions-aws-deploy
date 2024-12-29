@@ -25,4 +25,4 @@ WORKDIR /app
 COPY . .
 
 # Definir o ponto de entrada
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
