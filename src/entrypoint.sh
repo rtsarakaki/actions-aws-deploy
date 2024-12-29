@@ -7,10 +7,10 @@ USER_PASSWORD=$3
 AWS_REGION=$4
 DRY_RUN=$5
 
-echo STACK_NAME
-echo TEMPLATE_FILE
-echo AWS_REGION
-echo DRY_RUN
+echo $STACK_NAME
+echo $TEMPLATE_FILE
+echo $AWS_REGION
+echo $DRY_RUN
 
 aws cloudformation deploy \
     --stack-name $STACK_NAME \
