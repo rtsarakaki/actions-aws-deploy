@@ -10,6 +10,10 @@ inputs:
   aws_region:
     description: "AWS region where the stack will be created"
     required: true
+  dry_run:
+    description: "Enable test the template before creating the stack"
+    required: false
+    default: "false"
 runs:
   using: "docker"
   image: "Dockerfile"
