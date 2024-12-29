@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+# Verificar as variáveis recebidas
+echo "Received Parameters:"
+echo "STACK_NAME: $1"
+echo "TEMPLATE_FILE: $2"
+echo "USER_PASSWORD: $3"
+echo "AWS_REGION: $4"
+echo "DRY_RUN: $5"
+
 STACK_NAME=$1
 TEMPLATE_FILE=$2
 USER_PASSWORD=$3
