@@ -1,22 +1,28 @@
-FROM ubuntu:latest
+# Usando uma imagem base do Python para garantir que o pip esteja disponível
+FROM python:3.9-slim
 
 # Atualizar o apt-get e instalar dependências
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
-    sudo \
-    python3-venv \
-    python3-pip
+    sudo
 
-# Criar um ambiente virtual
-RUN python3 -m venv /env
+# Baixar e instalar o AWS CLI v2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    sudo ./aws/install && \
+    rm -rf awscliv2.zip aws/
 
-# Ativar o ambiente virtual e instalar o cfn-lint
-RUN /env/bin/pip install --upgrade pip && \
-    /env/bin/pip install cfn-lint
+# Instalar cfn-lint via pip
+RUN pip install --upgrade pip && \
+    pip install cfn-lint
 
-# Copiar o script de entrada
-COPY src/entrypoint.sh /entrypoint.sh
+
+# Definir o diretório de trabalho
+WORKDIR /app
+
+# Copiar o código do repositório para dentro do container
+COPY . .
 
 # Garantir que o script de entrada tenha permissões de execução
 RUN chmod +x /entrypoint.sh
