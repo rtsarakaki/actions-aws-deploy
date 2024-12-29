@@ -7,6 +7,9 @@ inputs:
   template_file:
     description: "The CloudFormation template file with the resources to be created"
     required: true
+  user_password:
+    description: "Password for the user to be created"
+    required: true
   aws_region:
     description: "AWS region where the stack will be created"
     required: true
