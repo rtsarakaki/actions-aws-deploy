@@ -1,19 +1,19 @@
 name: "Deploy AWS Stack"
 description: "Create or updates an AWS stack using CloudFormation"
 inputs:
-  stack_name:
+  stack-name:
     description: "The Stack Name"
     required: true
-  template_file:
+  template-file:
     description: "The CloudFormation template file with the resources to be created"
     required: true
-  user_password:
+  user-password:
     description: "Password for the user to be created"
     required: true
   aws_region:
     description: "AWS region where the stack will be created"
     required: true
-  dry_run:
+  dry-run:
     description: "Enable test the template before creating the stack"
     required: false
     default: "false"
