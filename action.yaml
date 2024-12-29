@@ -1,0 +1,15 @@
+name: "Deploy AWS Stack"
+description: "Create or updates an AWS stack using CloudFormation"
+inputs:
+  stack_name:
+    description: "The Stack Name"
+    required: true
+  template_file:
+    description: "The CloudFormation template file with the resources to be created"
+    required: true
+  aws_region:
+    description: "AWS region where the stack will be created"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
