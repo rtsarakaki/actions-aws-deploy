@@ -20,3 +20,9 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
+  args:
+    - ${{ inputs.stack-name }}
+    - ${{ inputs.template-file }}
+    - ${{ inputs.user-password }}
+    - ${{ inputs.aws-region }}
+    - ${{ inputs.dry-run }}
