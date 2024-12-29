@@ -20,10 +20,17 @@ echo "Template File: $TEMPLATE_FILE"
 echo "AWS Region: $AWS_REGION"
 echo "Dry Run: $DRY_RUN"
 
+# Lógica para o Dry Run
+if [ "$DRY_RUN" == "true" ]; then
+  DRY_RUN_OPTION="--no-execute-changeset"
+else
+  DRY_RUN_OPTION=""
+fi
+
 aws cloudformation deploy \
     --stack-name "$STACK_NAME" \
     --template-file "$TEMPLATE_FILE" \
     --parameter-overrides UserPassword="$USER_PASSWORD" \
     --capabilities CAPABILITY_NAMED_IAM \
     --region "$AWS_REGION" \
-    --no-execute-changeset $DRY_RUN
+    --no-execute-changeset $DRY_RUN_OPTION
