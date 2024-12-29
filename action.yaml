@@ -10,7 +10,7 @@ inputs:
   user-password:
     description: "Password for the user to be created"
     required: true
-  aws_region:
+  aws-region:
     description: "AWS region where the stack will be created"
     required: true
   dry-run:
