@@ -25,7 +25,7 @@ WORKDIR /app
 COPY . .
 
 # Garantir que o entrypoint.sh seja executável
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/src/entrypoint.sh
 
 # Definir o ponto de entrada
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/src/entrypoint.sh"]
