@@ -15,6 +15,5 @@ echo $DRY_RUN
 aws cloudformation deploy \
     --stack-name $STACK_NAME \
     --template-file $TEMPLATE_FILE \
-    --region $AWS_REGION \
     --parameter-overrides UserPassword=$USER_PASSWORD \
     --capabilities CAPABILITY_NAMED_IAM
