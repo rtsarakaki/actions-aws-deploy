@@ -22,10 +22,10 @@ RUN pip install --upgrade pip && \
 WORKDIR /app
 
 # Copiar o código do repositório para dentro do container
-COPY . .
+COPY /src/entrypoint.sh .
 
 # Garantir que o entrypoint.sh seja executável
-RUN chmod +x /app/src/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Definir o ponto de entrada
-ENTRYPOINT ["/app/src/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
