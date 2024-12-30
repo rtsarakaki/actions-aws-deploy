@@ -43,22 +43,6 @@ fi
 
 echo "All required parameters were provided."
 
-# Validar o template com cfn-lint
-echo "Validating template with cfn-lint..."
-cfn-lint $TEMPLATE_FILE --ignore-checks W
-if [ $? -ne 0 ]; then
-    echo "cfn-lint validation failed. Exiting..."
-    exit 1
-fi
-
-# Lógica para o Dry Run
-if [ "$DRY_RUN" == "true" ]; then
-    echo "Executing in Dry Run mode..."
-    DRY_RUN_OPTION="--no-execute-changeset"
-else
-    DRY_RUN_OPTION=""
-fi
-
 # Garantir que PARAMETER_OVERRIDES não esteja vazio
 if [ -z "$PARAMETER_OVERRIDES" ]; then
     PARAMETER_OVERRIDES=""
@@ -67,10 +51,26 @@ fi
 # Validar se o valor de CAPABILITIES é válido
 validate_capabilities "$CAPABILITIES"
 
+# Validar o template com cfn-lint
+echo "Validating template with cfn-lint..."
+cfn-lint $TEMPLATE_FILE --ignore-checks W
+if [ $? -ne 0 ]; then
+    echo "cfn-lint validation failed. Exiting..."
+    exit 1
+fi
+
 # Construir a string de capacidades
 CAPABILITIES_OPTION=""
 if [ -n "$CAPABILITIES" ]; then
     CAPABILITIES_OPTION="--capabilities $CAPABILITIES"
+fi
+
+# Lógica para o Dry Run
+if [ "$DRY_RUN" == "true" ]; then
+    echo "Executing in Dry Run mode..."
+    DRY_RUN_OPTION="--no-execute-changeset"
+else
+    DRY_RUN_OPTION=""
 fi
 
 # Executar o deploy
