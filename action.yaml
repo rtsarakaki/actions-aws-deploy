@@ -28,5 +28,5 @@ runs:
     - ${{ inputs.template-file }}
     - ${{ inputs.aws-region }}
     - ${{ inputs.parameter-overrides }}
-    - ${{ inputs.dry-run }}
     - ${{ inputs.capabilities }}
+    - ${{ inputs.dry-run }}

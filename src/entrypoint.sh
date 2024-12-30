@@ -6,8 +6,9 @@ STACK_NAME=$1
 TEMPLATE_FILE=$2
 AWS_REGION=$3
 PARAMETER_OVERRIDES=$4
-DRY_RUN=$5
-CAPABILITIES=$6
+CAPABILITIES=$5
+DRY_RUN=$6
+
 
 # Função para verificar se uma variável está vazia e coletar os parâmetros faltantes
 MISSING_PARAMS=()
@@ -15,6 +16,15 @@ MISSING_PARAMS=()
 check_required() {
   if [ -z "$1" ]; then
     MISSING_PARAMS+=("$2")
+  fi
+}
+
+# Função para verificar se o valor de CAPABILITIES é válido
+validate_capabilities() {
+  VALID_CAPABILITIES=("CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" "CAPABILITY_AUTO_EXPAND")
+  if [ -n "$1" ] && ! [[ " ${VALID_CAPABILITIES[@]} " =~ " $1 " ]]; then
+    echo "Error: Invalid CAPABILITIES value '$1'. Valid values are: ${VALID_CAPABILITIES[*]}"
+    exit 1
   fi
 }
 
@@ -36,6 +46,10 @@ echo "All required parameters were provided."
 # Validar o template com cfn-lint
 echo "Validating template with cfn-lint..."
 cfn-lint $TEMPLATE_FILE --ignore-checks W
+if [ $? -ne 0 ]; then
+    echo "cfn-lint validation failed. Exiting..."
+    exit 1
+fi
 
 # Lógica para o Dry Run
 if [ "$DRY_RUN" == "true" ]; then
@@ -44,6 +58,14 @@ if [ "$DRY_RUN" == "true" ]; then
 else
     DRY_RUN_OPTION=""
 fi
+
+# Garantir que PARAMETER_OVERRIDES não esteja vazio
+if [ -z "$PARAMETER_OVERRIDES" ]; then
+    PARAMETER_OVERRIDES=""
+fi
+
+# Validar se o valor de CAPABILITIES é válido
+validate_capabilities "$CAPABILITIES"
 
 # Construir a string de capacidades
 CAPABILITIES_OPTION=""
@@ -60,3 +82,10 @@ aws cloudformation deploy \
     --region "$AWS_REGION" \
     $CAPABILITIES_OPTION \
     $DRY_RUN_OPTION
+
+if [ $? -eq 0 ]; then
+    echo "Deployment successful."
+else
+    echo "Deployment failed."
+    exit 1
+fi
