@@ -1,5 +1,5 @@
 name: "Deploy AWS Stack"
-description: "Create or updates an AWS stack using CloudFormation"
+description: "Create or update an AWS stack using CloudFormation"
 inputs:
   stack-name:
     description: "The Stack Name"
@@ -7,14 +7,17 @@ inputs:
   template-file:
     description: "The CloudFormation template file with the resources to be created"
     required: true
-  user-password:
-    description: "Password for the user to be created"
-    required: true
   aws-region:
     description: "AWS region where the stack will be created"
     required: true
+  parameter-overrides:
+    description: "Parameters to override in the stack, in the format Key=Value pairs (space-separated)"
+    required: false
+  capabilities:
+    description: "Capabilities required for the stack (e.g., CAPABILITY_IAM, CAPABILITY_NAMED_IAM)"
+    required: false
   dry-run:
-    description: "Enable test the template before creating the stack"
+    description: "Enable to test the template before creating the stack"
     required: false
     default: "false"
 runs:
@@ -23,6 +26,7 @@ runs:
   args:
     - ${{ inputs.stack-name }}
     - ${{ inputs.template-file }}
-    - ${{ inputs.user-password }}
     - ${{ inputs.aws-region }}
+    - ${{ inputs.parameter-overrides }}
     - ${{ inputs.dry-run }}
+    - ${{ inputs.capabilities }}

@@ -4,55 +4,59 @@ set -e
 # Definindo os parâmetros obrigatórios
 STACK_NAME=$1
 TEMPLATE_FILE=$2
-USER_PASSWORD=$3
-AWS_REGION=$4
+AWS_REGION=$3
+PARAMETER_OVERRIDES=$4
 DRY_RUN=$5
+CAPABILITIES=$6
 
 # Função para verificar se uma variável está vazia e coletar os parâmetros faltantes
 MISSING_PARAMS=()
 
-check_empty() {
+check_required() {
   if [ -z "$1" ]; then
     MISSING_PARAMS+=("$2")
   fi
 }
 
 # Verificar todos os parâmetros obrigatórios
-echo "Verificando parâmetros..."
+echo "Checking required parameters..."
 
-check_empty "$STACK_NAME" "STACK_NAME"
-check_empty "$TEMPLATE_FILE" "TEMPLATE_FILE"
-check_empty "$USER_PASSWORD" "USER_PASSWORD"
-check_empty "$AWS_REGION" "AWS_REGION"
+check_required "$STACK_NAME" "STACK_NAME"
+check_required "$TEMPLATE_FILE" "TEMPLATE_FILE"
+check_required "$AWS_REGION" "AWS_REGION"
 
 # Se houver parâmetros faltando, exibe uma mensagem de erro e encerra o script
 if [ ${#MISSING_PARAMS[@]} -gt 0 ]; then
-    echo "Faltaram os seguintes parâmetros obrigatórios: ${MISSING_PARAMS[@]}. O deploy não será executado."
+    echo "The following required parameters are missing: ${MISSING_PARAMS[@]}. Deployment will not proceed."
     exit 1
 fi
 
-echo "Todos os parâmetros obrigatórios foram passados."
+echo "All required parameters were provided."
 
 # Validar o template com cfn-lint
-echo "Validando o template com cfn-lint..."
+echo "Validating template with cfn-lint..."
 cfn-lint $TEMPLATE_FILE --ignore-checks W
-
-# Se o cfn-lint falhar, o script será interrompido devido ao set -e
 
 # Lógica para o Dry Run
 if [ "$DRY_RUN" == "true" ]; then
-    echo "Executando em modo Dry Run..."
+    echo "Executing in Dry Run mode..."
     DRY_RUN_OPTION="--no-execute-changeset"
 else
     DRY_RUN_OPTION=""
 fi
 
+# Construir a string de capacidades
+CAPABILITIES_OPTION=""
+if [ -n "$CAPABILITIES" ]; then
+    CAPABILITIES_OPTION="--capabilities $CAPABILITIES"
+fi
+
 # Executar o deploy
-echo "Iniciando o deploy..."
+echo "Starting deployment..."
 aws cloudformation deploy \
     --stack-name "$STACK_NAME" \
     --template-file "$TEMPLATE_FILE" \
-    --parameter-overrides UserPassword="$USER_PASSWORD" \
-    --capabilities CAPABILITY_NAMED_IAM \
+    --parameter-overrides $PARAMETER_OVERRIDES \
     --region "$AWS_REGION" \
+    $CAPABILITIES_OPTION \
     $DRY_RUN_OPTION
