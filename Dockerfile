@@ -1,5 +1,5 @@
 # Usando uma imagem base do Python para garantir que o pip esteja disponível
-FROM python:3.9-slim
+FROM python:3.9-alpine
 
 # Atualizar o apt-get e instalar dependências
 RUN apt-get update && apt-get install -y \
