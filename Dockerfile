@@ -1,28 +1,30 @@
-# Usar uma imagem base leve
-FROM python:3.9-alpine
+# Usando uma imagem base do Python para garantir que o pip esteja disponível
+FROM python:3.9-slim
 
-# Instalar dependências necessárias
-RUN apk add --no-cache \
+# Atualizar o apt-get e instalar dependências
+RUN apt-get update && apt-get install -y \
     curl \
     unzip \
-    bash
+    sudo
 
-# Instalar AWS CLI v2
+# Baixar e instalar o AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
-    ./aws/install && \
+    sudo ./aws/install && \
     rm -rf awscliv2.zip aws/
 
 # Instalar cfn-lint via pip
-RUN pip install --no-cache-dir cfn-lint
+RUN pip install --upgrade pip && \
+    pip install cfn-lint
+
 
 # Definir o diretório de trabalho
 WORKDIR /app
 
-# Copiar o script de entrada
+# Copiar o código do repositório para dentro do container
 COPY /src/entrypoint.sh .
 
-# Garantir que o script seja executável
+# Garantir que o entrypoint.sh seja executável
 RUN chmod +x /app/entrypoint.sh
 
 # Definir o ponto de entrada
