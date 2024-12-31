@@ -2,10 +2,11 @@
 FROM python:3.9-alpine
 
 # Atualizar o apt-get e instalar dependências
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     curl \
     unzip \
-    sudo
+    bash
+
 
 # Baixar e instalar o AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
