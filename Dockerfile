@@ -1,12 +1,11 @@
 # Usando uma imagem base do Python para garantir que o pip esteja disponível
-FROM python:3.9-alpine
+FROM python:3.9-slim
 
 # Atualizar o apt-get e instalar dependências
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     curl \
     unzip \
-    bash
-
+    sudo
 
 # Baixar e instalar o AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
